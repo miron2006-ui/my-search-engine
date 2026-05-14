@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Curated Search</title>
+    <style>
+        /* Keeping that clean Google aesthetic */
+        body { font-family: 'Segoe UI', arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #fff; }
+        .logo { font-size: 70px; font-weight: bold; margin-bottom: 20px; }
+        .g { color: #4285F4; } .o1 { color: #EA4335; } .o2 { color: #FBBC05; } .l { color: #34A853; }
+        
+        .search-box { width: 500px; padding: 15px 25px; border: 1px solid #dfe1e5; border-radius: 30px; font-size: 16px; outline: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .search-box:focus { box-shadow: 0 1px 6px rgba(32,33,36,0.28); }
+        
+        .buttons { margin-top: 25px; }
+        button { background: #f8f9fa; border: 1px solid #f8f9fa; padding: 10px 20px; margin: 5px; border-radius: 4px; cursor: pointer; color: #3c4043; }
+        button:hover { border: 1px solid #dadce0; color: #202124; }
+    </style>
+</head>
+<body>
+
+    <div class="logo">
+        <span class="g">S</span><span class="o1">e</span><span class="o2">a</span><span class="g">r</span><span class="l">c</span><span class="o1">h</span>
+    </div>
+
+    <input type="text" id="query" class="search-box" placeholder="Try 'youtube.com' or 'minecraft.net'..." autocomplete="off">
+
+    <div class="buttons">
+        <button onclick="runSearch()">Manual Search</button>
+        <button onclick="surpriseMe()">I'm Feeling Lucky</button>
+    </div>
+
+    <script>
+        // 1. The "Switch" Logic via Object Mapping (Clean & Scalable)
+        const database = {
+            "youtube.com": "https://www.youtube.com",
+            "roblox.com": "https://www.roblox.com",
+            "minecraft.net": "https://www.minecraft.net",
+            "wikipedia.org": "https://www.wikipedia.org",
+            "discord.com": "https://www.discord.com"
+        };
+
+        const input = document.getElementById('query');
+
+        function runSearch() {
+            const val = input.value.toLowerCase().trim();
+
+            if (database[val]) {
+                // It's in our curated list!
+                window.location.href = database[val];
+            } else if (val !== "") {
+                // 3. The "Wildcard" - Fallback to Google if we don't know it
+                window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(val);
+            }
+        }
+
+        // 2. The "Feeling Lucky" Logic - Randomly picks from our list
+        function surpriseMe() {
+            const sites = Object.values(database);
+            // Add the Rickroll to the random pool for a 1-in-6 chance
+            sites.push("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            
+            const randomSite = sites[Math.floor(Math.random() * sites.length)];
+            window.location.href = randomSite;
+        }
+
+        // Allow pressing Enter
+        input.addEventListener("keypress", (e) => { if(e.key === "Enter") runSearch(); });
+    </script>
+</body>
+</html>
